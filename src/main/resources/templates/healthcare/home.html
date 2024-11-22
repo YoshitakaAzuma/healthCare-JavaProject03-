@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>ホーム</title>
+</head>
+<body>
+	<h2>ホーム画面</h2>
+	<a th:unless="${evaluation}" th:href="@{/firstForm}">記録する</a><br>
+	
+	
+	<div th:if="${evaluation}">
+		<a th:href="@{/form}">記録する</a><br>
+		<a th:href="@{/show}">データ一覧</a>
+	</div>
+	<br>
+		<!-- ログアウト -->
+		<form th:action="@{/logout}" method="post">
+			<input type="submit" value="ログアウト">
+			
+		</form>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.example.healthcare2.repository.HealthDataMapper">
+	
+	<select id="findDataListByUserId" resultType="com.example.healthcare2.entity.HealthData">
+		select * from health_data where user_id = #{user_id} and record_date >= #{point_date}
+	</select>	
+	
+	<select id="findFirstDateByUserId">
+		select record_date from health_data where user_id = #{user_id} and id = (select min(id) from health_data where user_id = #{user_id})
+	</select>
+	
+	
+	<select id="findLatestDataByUserId" resultType="com.example.healthcare2.entity.HealthData">
+		SELECT *
+		FROM health_data
+		WHERE user_id = #{user_id}
+		AND id = (SELECT MAX(id) FROM health_data WHERE user_id = #{user_id});
+	</select>
+	
+	
+	
+	
+	<insert id="insertHealthData">
+		insert into health_data (user_id, record_date, weight, height, body_fat_percentage, sBP, dBP, steps)
+		values (#{user_id},#{record_date},#{weight},#{height},#{body_fat_percentage},#{sBP},#{dBP},#{steps})
+	</insert>
+	
+</mapper>

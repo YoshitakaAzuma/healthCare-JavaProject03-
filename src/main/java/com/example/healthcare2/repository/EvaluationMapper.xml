@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.example.healthcare2.repository.EvaluationMapper">
+	
+	<select id="getEvaluationsByUserId" resultType="com.example.healthcare2.entity.Evaluation">
+		select * from evaluations where user_id = #{userId}
+	</select>
+	
+	<insert id="insertEvaluation">
+		insert into evaluations (user_id, record_date, total, weight_and_fat, blood_pressure, steps)
+		 values(#{user_id},#{record_date},#{total},#{weight_and_fat},#{blood_pressure},#{steps})
+	</insert>
+	
+	<update id="updateEvaluation">
+		update evaluations set record_date = #{record_date}, total = #{total}, weight_and_fat = #{weight_and_fat},
+		blood_pressure = #{blood_pressure},steps = #{steps} where user_id = #{user_id}
+	</update>
+	
+	
+	
+	
+	
+	
+</mapper>

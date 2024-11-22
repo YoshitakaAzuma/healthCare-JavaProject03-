@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.healthcare2.repository.UserMapper">
+
+<select id="findByUsername" resultType="com.example.healthcare2.entity.UserEntity">
+	select * from users where username = #{username}
+</select>
+
+<select id="findByEmail" resultType="com.example.healthcare2.entity.UserEntity">
+	select * from users where email = #{email}
+</select>
+
+<insert id="insertUserEntity">
+	insert into users (username, email, password_hash, authority, birth_date, gender)
+	VALUES (#{username}, #{email}, #{password_hash}, 'USER',#{birth_date},  CAST(#{gender} AS gender))
+</insert>
+
+
+</mapper>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<typeHandlers>
+  <typeHandler handler="org.apache.ibatis.type.LocalDateTypeHandler" />
+  <!-- 他の必要なTypeHandlerもここに追加 -->
+</typeHandlers>

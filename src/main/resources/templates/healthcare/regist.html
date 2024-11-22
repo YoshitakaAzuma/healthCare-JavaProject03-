@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ヘルスデータ入力</title>
+</head>
+<body>
+    <h1>ヘルスデータ入力フォーム</h1>
+    <form th:action="@{/record}" th:object="${healthData}" method="post">
+        <!-- ユーザーID（非表示フィールド） -->
+        <input type="hidden" th:field="*{user_id}">
+
+		<!-- 身長入力フィールド（初期値として以前のデータを設定） -->
+		<div>
+		    <label for="height">身長 (cm):</label>
+		    <input type="number" step="0.1" th:field="*{height}" required>
+		</div>
+
+		
+        <!-- 体重入力フィールド -->
+        <div>
+            <label for="weight">体重 (kg):</label>
+            <input type="number" step="0.1" th:name="weight" required>
+        </div>
+
+        
+        <!-- 体脂肪率入力フィールド -->
+        <div>
+            <label for="body_fat_percentage">体脂肪率 (%):</label>
+            <input type="number" step="1" th:name="body_fat_percentage" required>
+        </div>
+
+        <!-- 最高血圧入力フィールド -->
+        <div>
+            <label for="sBP">最高血圧 (mmHg):</label>
+            <input type="number" th:name="sBP" required>
+        </div>
+
+        <!-- 最低血圧入力フィールド -->
+        <div>
+            <label for="dBP">最低血圧 (mmHg):</label>
+            <input type="number" th:name="dBP" required>
+        </div>
+
+        <!-- 歩数入力フィールド -->
+        <div>
+            <label for="steps">歩数:</label>
+            <input type="number" th:name="steps" required>
+        </div>
+
+        <!-- 送信ボタン -->
+        <div>
+            <button type="submit">記録する</button>
+        </div>
+    </form>
+</body>
+</html>

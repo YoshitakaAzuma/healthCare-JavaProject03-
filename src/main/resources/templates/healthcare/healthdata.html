@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>健康データ</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .chart-container {
+            width: 80%;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+	<h2>総合評価</h2>
+			<span th:text="${evaluation.total}"></span>
+    <h1>健康データ</h1>
+    
+    <!-- Weight Chart -->
+    <div class="chart-container">
+        <h2>体重 (Weight)</h2>
+        <canvas id="weightChart"></canvas>
+    </div>
+	<span th:text="${evaluation.weight_and_fat}"></span>
+    <div class="chart-container">
+        <h2>血圧 (BloodPresser)</h2>
+        <canvas id="BloodPresserChart"></canvas>
+    </div>
+	<span th:text="${evaluation.blood_pressure}"></span>
+    <div class="chart-container">
+        <h2>歩いた歩数 (Steps)</h2>
+        <canvas id="stepsChart"></canvas>
+    </div>
+	<span th:text="${evaluation.steps}"></span>
+	<br>
+	<br>
+	<a href="/" style="text-align: center;">ホームへ</a>
+
+   
+
+    <script	type="text/javascript" th:inline="javascript">
+		/*<![CDATA[*/
+			
+		
+		// 体重と体脂肪率を表示するチャート
+		var ctx1 = document.getElementById("weightChart").getContext('2d');
+		    var weightChart = new Chart(ctx1, {
+		        type: 'bar', // チャート全体のタイプをバーに設定
+		        data: {
+		            labels: /*[[ ${dateArray} ]]*/, // 日付のラベル
+		            datasets: [
+		                {
+		                    label: "体重",
+		                    type: 'bar', // 体重のデータセットをバーグラフで表示
+		                    borderColor: 'rgb(0, 255, 0)',
+		                    backgroundColor: 'rgba(0, 255, 0, 0.2)', // バーの背景色
+		                    yAxisID: 'y-axis-left', // 左のy軸を指定
+		                    data: /*[[ ${weightArray} ]]*/, // 体重データ
+		                    barThickness: 10, // バーの太さ
+		                },
+		                {
+		                    label: "体脂肪率",
+		                    type: 'line', // 体脂肪率のデータセットをラインチャートで表示
+		                    borderColor: 'rgb(255, 0, 255)',
+		                    backgroundColor: 'rgba(255, 0, 255, 0.1)', // ラインの背景色
+		                    yAxisID: 'y-axis-right', // 右のy軸を指定
+		                    lineTension: 0.1, // 線の曲がり具合
+		                    fill: false,
+		                    data: /*[[ ${bodyFatPersentageArray} ]]*/, // 体脂肪率データ
+		                    pointRadius: 5, // データポイントのサイズ
+		                    pointBackgroundColor: 'rgb(255, 0, 255)', // データポイントの背景色
+		                }
+		            ]
+		        },
+		        options: {
+		            responsive: true,
+		            plugins: {
+		                legend: {
+		                    display: true,
+		                    position: 'top', // レジェンドの位置
+		                },
+		                tooltip: {
+		                    mode: 'index', // ツールチップのモード
+		                    intersect: false // ツールチップの表示方法
+		                },
+		                title: {
+		                    display: true,
+		                    text: '体重と体脂肪率の推移', // チャートタイトル
+		                    font: {
+		                        size: 18 // タイトルのフォントサイズ
+		                    }
+		                }
+		            },
+		            scales: {
+		                'y-axis-left': {
+		                    type: 'linear',
+		                    position: 'left',
+		                    suggestedMin: /*[[ ${weightMinMax[0]} ]]*/,
+		                    suggestedMax: /*[[ ${weightMinMax[1]} ]]*/,
+		                    ticks: {
+		                        beginAtZero: false,
+		                        callback: function(value) { return value + ' kg'; } // y軸のラベルに単位を追加
+		                    },
+		                    scaleLabel: {
+		                        display: true,
+		                        labelString: '体重 (kg)' // 左軸ラベル
+		                    }
+		                },
+		                'y-axis-right': {
+		                    type: 'linear',
+		                    position: 'right',
+		                    suggestedMin: /*[[ ${bodyFatMinMax[0]} ]]*/,
+		                    suggestedMax: /*[[ ${bodyFatMinMax[1]} ]]*/,
+							beginAtZero: false,
+		                    ticks: {
+		                        
+		                        callback: function(value) { return value + ' %'; } // y軸のラベルに単位を追加
+		                    },
+		                    scaleLabel: {
+		                        display: true,
+		                        labelString: '体脂肪率 (%)' // 右軸ラベル
+		                    }
+		                }
+		            }
+		        }
+		    });
+						
+			// 血圧のグラフ
+			var ctx = document.getElementById("BloodPresserChart").getContext('2d');
+			    var bloodPresserChart = new Chart(ctx, {
+			        type: 'line',
+			        data: {
+			            labels: /*[[ ${dateArray} ]]*/, // 日付のラベル
+			            datasets: [
+			                {
+			                    label: "最高血圧",
+			                    borderColor: 'rgb(255, 0, 0)',
+			                    backgroundColor: 'rgba(255, 0, 0, 0.1)', // 最高血圧の背景色
+			                    data: /*[[ ${sbpArray} ]]*/, // 最高血圧データ
+			                    pointRadius: 5, // データポイントのサイズ
+			                    pointBackgroundColor: 'rgb(255, 0, 0)', // データポイントの背景色
+			                    lineTension: 0.1, // 線の曲がり具合
+			                },
+			                {
+			                    label: "最低血圧",
+			                    borderColor: 'rgb(0, 0, 255)',
+			                    backgroundColor: 'rgba(0, 0, 255, 0.1)', // 最低血圧の背景色
+			                    data: /*[[ ${dbpArray} ]]*/, // 最低血圧データ
+			                    pointRadius: 5, // データポイントのサイズ
+			                    pointBackgroundColor: 'rgb(0, 0, 255)', // データポイントの背景色
+			                    lineTension: 0.1, // 線の曲がり具合
+			                }
+			            ]
+			        },
+			        options: {
+			            responsive: true,
+			            plugins: {
+			                legend: {
+			                    display: true, // レジェンドを表示
+			                    position: 'top', // レジェンドの位置
+			                },
+			                tooltip: {
+			                    mode: 'index', // ツールチップのモード
+			                    intersect: false // ツールチップの表示方法
+			                },
+			                title: {
+			                    display: true,
+			                    text: '血圧の推移', // チャートタイトル
+			                    font: {
+			                        size: 18 // タイトルのフォントサイズ
+			                    }
+			                }
+			            },
+			            scales: {
+			                y: {
+			                    beginAtZero: true, // y軸の最小値を0に設定
+			                    title: {
+			                        display: true,
+			                        text: '血圧 (mmHg)' // y軸のタイトル
+			                    }
+			                },
+			                x: {
+			                    title: {
+			                        display: true,
+			                        text: '日付' // x軸のタイトル
+			                    }
+			                }
+			            }
+			        }
+			    });
+			
+			// 歩数のグラフ
+			var ctx = document.getElementById("stepsChart").getContext('2d');
+			        var stepsChart = new Chart(ctx, {
+			            type: 'line', // チャートのタイプをラインに設定
+			            data: {
+			                labels: /*[[ ${dateArray} ]]*/, // 日付のラベル
+			                datasets: [
+			                    {
+			                        label: "歩数", // データセットのラベル
+			                        borderColor: 'rgb(0, 123, 255)', // 線の色
+			                        backgroundColor: 'rgba(0, 123, 255, 0.1)', // 背景色
+			                        data: /*[[ ${stepsArray} ]]*/, // 歩数データ
+			                        pointRadius: 5, // データポイントのサイズ
+			                        pointBackgroundColor: 'rgb(0, 123, 255)', // データポイントの背景色
+			                        lineTension: 0.1, // 線の曲がり具合
+			                        borderWidth: 2, // 線の太さ
+			                    }
+			                ]
+			            },
+			            options: {
+			                responsive: true,
+			                plugins: {
+			                    legend: {
+			                        display: true, // レジェンドを表示
+			                        position: 'top', // レジェンドの位置
+			                    },
+			                    tooltip: {
+			                        mode: 'index', // ツールチップのモード
+			                        intersect: false, // ツールチップの表示方法
+			                        callbacks: {
+			                            label: function(context) {
+			                                return context.dataset.label + ': ' + context.raw + ' 歩'; // ツールチップのラベル
+			                            }
+			                        }
+			                    },
+			                    title: {
+			                        display: true,
+			                        text: '日別歩数', // チャートタイトル
+			                        font: {
+			                            size: 18 // タイトルのフォントサイズ
+			                        }
+			                    }
+			                },
+			                scales: {
+			                    x: {
+			                        time: {
+			                            unit: 'day', // 単位は日
+			                            tooltipFormat: 'll', // ツールチップの日付フォーマット
+			                        },
+			                        title: {
+			                            display: true,
+			                            text: '日付' // x軸のタイトル
+			                        }
+			                    },
+			                    y: {
+			                        title: {
+			                            display: true,
+			                            text: '歩数' // y軸のタイトル
+			                        },
+			                        ticks: {
+			                            beginAtZero: true, // y軸の最小値を0に設定
+			                            callback: function(value) { return value + ' 歩'; } // y軸のラベルに単位を追加
+			                        }
+			                    }
+			                }
+			            }
+			        });
+		    /*]]>*/
+    </script>
+</body>
+</html>
